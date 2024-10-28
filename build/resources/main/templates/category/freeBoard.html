@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- BootStrap Link    -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+    <!-- ToastUI Chart -->
+    <!--    https://congsong.tistory.com/68  설명 블로그 -->
+    <link rel="stylesheet" href="https://uicdn.toast.com/chart/latest/toastui-chart.min.css" />
+    <script src="https://uicdn.toast.com/chart/latest/toastui-chart.min.js"></script>
+
+    <!-- Main Page CSS  -->
+    <link href="/css/main.css" rel="stylesheet">
+    <!-- GuestBoard CSS   -->
+    <link href="/css/Categories.css" rel="stylesheet">
+</head>
+
+
+<!-- Personal_info -Nav Start (href="/personal_info) -->
+<style>
+</style>
+
+<body>
+
+<!-- Header Start -->
+<header class="p-3 bg-warning text-white">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-between">
+            <a href="/" class="nav-link" style="display: flex; align-items: center;">
+                <img src="/images/dog4.png" alt="Home"
+                     style="width: 60px; height: 50px; border-radius: 10%; object-fit: cover;">
+            </a>
+            <h1 style="font-weight: bold">Animal Cafe 자유게시판</h1>
+            <div class="row justify-content-end">
+                <form class="text-end ml-3 mr-3" th:action="@{/search_find}" method="get">
+                    <input type="search" class="form-control form-control-dark" placeholder="Search..."
+                           aria-label="Search">
+                </form>
+                <div class="text-end ml-auto d-flex">
+                    <button type="button" class="btn btn-info me-2" id="login" sec:authorize="isAnonymous()">Login</button>
+                    <!-- 로그아웃 버튼 -->
+                    <form action="/kakao/logout" method="post">
+                        <button type="submit" sec:authorize="isAuthenticated()"  class="btn btn-danger me-2 ml-2" >Logout</button>
+                    </form>
+                    <button type="button" sec:authorize="isAnonymous()" class="btn btn-dark me-2 ml-2" id="signup">Sign-up</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- Header End -->
+
+
+<div class="container-fluid container">
+
+    <!-- Nav Start -->
+    <div class="nav-container">
+        <div class="nav-container">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container">
+                    <div class="mx-auto">
+                        <div class="col-lg-4">
+                            <a href="/personal_info">
+                                <svg class="bd-placeholder-img rounded-circle mt-2" width="140" height="140"
+                                     xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 140x140"
+                                     preserveAspectRatio="xMidYMid slice" focusable="false">
+                                    <title>Placeholder</title>
+
+                                    <!-- 원형으로 자르기 위한 클립 경로 정의 -->
+                                    <defs>
+                                        <clipPath id="circleView">
+                                            <circle cx="50%" cy="50%" r="50%" />
+                                        </clipPath>
+                                    </defs>
+
+                                    <!-- 이미지 삽입 -->
+                                    <image class="mt-3" href="/images/nuguri.gif" width="140" height="140" clip-path="url(#circleView)"></image>
+
+                                    <sec:authorize access="isAuthenticated()">
+                                        <text x="50%" y="50%" fill="#777" dy=".3em">140x140</text>
+                                    </sec:authorize>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Navigation Menu -->
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item">
+                    <a href="/" class="nav-link active nav-home" aria-current="page" style="margin: 20px">
+                        <svg class="bi me-2" width="16" height="16">
+                            <use xlink:href="#home"></use>
+                        </svg>
+                        Home
+                    </a>
+                </li>
+                <li>
+                    <a href="/freeBoard" class="nav-link link-dark">
+                        <svg class="bi me-2" width="16" height="16">
+                            <use xlink:href="#speedometer2"></use>
+                        </svg>
+                        자유게시판
+                    </a>
+                </li>
+                <li>
+                    <a href="/QnA" class="nav-link link-dark">
+                        <svg class="bi me-2" width="16" height="16">
+                            <use xlink:href="/QnA"></use>
+                        </svg>
+                        QnA
+                    </a>
+                </li>
+                <li>
+                    <a href="/UCC" class="nav-link link-dark">
+                        <svg class="bi me-2" width="16" height="16">
+                            <use xlink:href="/UCC"></use>
+                        </svg>
+                        UCC
+                    </a>
+                </li>
+                <li>
+                    <a href="/guestBook" class="nav-link link-dark">
+                        <svg class="bi me-2" width="16" height="16">
+                            <use xlink:href="/guestBook"></use>
+                        </svg>
+                        방명록
+                    </a>
+                </li>
+            </ul>
+            <!-- Navigation Menu END -->
+
+            <!-- Chart Count   -->
+            <div id="chart" style="margin-left: 10px; margin-top: 20px" ></div>
+            <!-- Chart Count  END   -->
+        </div>
+    </div>
+    <!-- Nav End -->
+
+
+    <!-- Main Content    -->
+    <div class="main-content">
+
+        <!--  Banner  -->
+        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+            </ol>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img class="d-block w-100" src="/images/banner.jpg" alt="First slide">
+                </div>
+                <div class="carousel-item">
+                    <img class="d-block w-100" src="/images/banner2.jpg" alt="Second slide">
+                </div>
+                <div class="carousel-item">
+                    <img class="d-block w-100" src="/images/banner3.png" alt="Third slide">
+                </div>
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+
+        <div class="p-1 mb- bg-light rounded-3" style="margin-top: 20px">
+            <!--  Information  -->
+            <div class="p-1 mb- bg-light rounded-3">
+                <div class="container-fluid py-5">
+                    <div>
+                        <h1 class="display-5 fw-bold" style="color: lightcoral; margin-right: 15px"> 안내</h1></div>
+                    <div class="col-md-12 fs-4">
+                        <p>※ 날씨가 덥습니다. 우리 카페애완동물친구들도 덥지 않은지 사랑과 관심을 기울여주세요. </p>
+                        <p>※ 우리집 애완동물도 소중한 만큼 다른 회원애완동물 또한 소중합니다. 서로 존중해주세요. </p>
+                        <p>※ 매주 2, 4 쨋주 11:00 에 뚝섬역에서 모임이 있습니다. 편안한 마음으로 오셔도 됩니다. </p>
+                        <p>※ 오늘도 좋은 하루되세요 ♥</p>
+                    </div>
+                </div>
+            </div>
+            <!--   content  -->
+            <h1 class="ml-5 mb-3" style="color:#63d8f3; font-weight: bold">자유게시판</h1>
+            <div class="ml-3 row align-items-md-stretch">
+                <div class=" p-3 mb-1 bg-white border rounded-3" style="width: 700px">
+
+                    <button class="btn" id="write" style="float:right">
+                        <div class="wrapper">
+                            <p class="text" style="font-weight: bold; color: darkslateblue">글작성</p>
+
+                            <div class="flower flower1">
+                                <div class="petal one"></div>
+                                <div class="petal two"></div>
+                                <div class="petal three"></div>
+                                <div class="petal four"></div>
+                            </div>
+                            <div class="flower flower2">
+                                <div class="petal one"></div>
+                                <div class="petal two"></div>
+                                <div class="petal three"></div>
+                                <div class="petal four"></div>
+                            </div>
+                            <div class="flower flower3">
+                                <div class="petal one"></div>
+                                <div class="petal two"></div>
+                                <div class="petal three"></div>
+                                <div class="petal four"></div>
+                            </div>
+                            <div class="flower flower4">
+                                <div class="petal one"></div>
+                                <div class="petal two"></div>
+                                <div class="petal three"></div>
+                                <div class="petal four"></div>
+                            </div>
+                            <div class="flower flower5">
+                                <div class="petal one"></div>
+                                <div class="petal two"></div>
+                                <div class="petal three"></div>
+                                <div class="petal four"></div>
+                            </div>
+                            <div class="flower flower6">
+                                <div class="petal one"></div>
+                                <div class="petal two"></div>
+                                <div class="petal three"></div>
+                                <div class="petal four"></div>
+                            </div>
+                        </div>
+                    </button>
+
+                    <div class="col-md-20 mt-5" style="line-height: 1.6">
+                        <hr>
+
+                        <table style="border-collapse: collapse; width: 100%;">
+                            <thead>
+                            <tr>
+                                <th style="border: 1px solid black; padding: 8px;">Title</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="item : ${articles}">
+                                <td style="border: 1px solid black; padding: 8px;">
+                                    <a th:href="@{/article/{id}(id=${item.id})}" th:text="${item.title}"></a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+            <hr>
+
+            <div style="text-align: center">
+                <div style="text-align: center">
+                    <ul class="pagination justify-content-center"> <!-- 1. 클래스명 변경 -->
+                        <li th:if="${currentPage > 0}">
+                            <a class="page-link" th:href="@{/freeBoard(page=${currentPage - 1})}">&laquo;</a> <!-- 2. 이전 페이지로 이동 -->
+                        </li>
+                        <li th:each="pageIdx : ${#numbers.sequence(0, totalPages - 1)}" th:class="${pageIdx == currentPage} ? 'active' : ''">
+                            <a class="page-link" th:href="@{/freeBoard(page=${pageIdx})}" th:text="${pageIdx + 1}"></a>
+                        </li>
+                        <li th:if="${currentPage < totalPages - 1}">
+                            <a class="page-link" th:href="@{/freeBoard(page=${currentPage + 1})}">&raquo;</a> <!-- 3. 다음 페이지로 이동 -->
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+
+
+            <div class="p-1 mb- bg-light rounded-3" style="margin-top: 20px">
+                <!-- Information -->
+                <form class="search-container" th:action="@{/search_find}" method="get">
+                    <div class="new-wrapper">
+                        <div class="new-option">
+                            <input class="new-input" type="radio" name="option" value="title" checked>
+                            <div class="new-btn">
+                                <span class="new-span">Title</span>
+                            </div>
+                        </div>
+                        <div class="new-option">
+                            <input class="new-input" type="radio" name="option" value="content">
+                            <div class="new-btn">
+                                <span class="new-span">Content</span>
+                            </div>
+                        </div>
+                        <div class="new-option">
+                            <input class="new-input" type="radio" name="option" value="Author">
+                            <div class="new-btn">
+                                <span class="new-span">Author</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="search" style="margin-left: 20px">
+                        <input type="text" name="keyword" placeholder="Search...">
+                        <button type="submit">검색</button>
+                    </div>
+                </form>
+
+            </div>
+
+
+
+            <br>
+
+            <!--  advert content  -->
+        </div>
+        <div class="p-5 mb-4 bg-light rounded-3" style="margin-top: 10px;">
+            광고
+            <img src="/images/banner.jpg" style="width: 100%" alt="" onclick="window.open('https://jennetph.co.kr/', '_blank')">
+            <hr>
+            <h3 style="color: red"> 국내 1위 동물병원 055-585-1718 </h3>
+            <h5> 동물을 사랑하는 여러분들을 위해 최저가로 모십니다.</h5>
+        </div>
+    </div>
+    <!-- Main Content END  -->
+</div>
+
+<!--Footer -->
+<footer class="footer mt-auto py-3" style="background-color: #f8f9fa;">
+    <div class="container">
+        <div class="text-center text-muted py-3">
+            <p class="mb-0">국립창원대학교 (우)51140 경남 창원시 의창구 창원대학로 20 - 조원:   임경용, 양민혁, 고승우</p>
+        </div>
+    </div>
+    <!-- Button to Top-->
+    <button id="topBtn" onclick="scrollToTop()" class="circle-button">위로이동</button>
+    <div class="bottomTop"> &nbsp;</div>
+</footer>
+<!--Footer End -->
+
+<!--로그인 로그아웃 -->
+
+<script src="/js/all.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+<script src="/js/categories.js"></script>
+<script src="/js/columnGraph.js"></script>
+</body>
+</html>

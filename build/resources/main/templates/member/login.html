@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입 화면 샘플 - Bootstrap</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="/css/hamster_wheel.css" type="text/css">
+    <style>
+        body { /*Body 부분 */
+            min-height: 100vh;
+            background: linear-gradient(to top right, #92b5db 0%, #1d466c 100%);
+        }
+
+        .input-form { /*작성 폼 부분  */
+            max-width: 680px;
+
+            margin-top: 80px;
+            padding: 32px;
+
+            background: #fff;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            border-radius: 10px;
+            -webkit-box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15);
+            -moz-box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15);
+            box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15)
+        }
+
+        .logInOutCenter { /*  로그인 회원가입 가운데 정렬 */
+            display: flex;
+            justify-content: center;
+        }
+
+        .buttonCenter { /*  로그인, 회원가입 인라인 블럭  */
+            display: inline-block;
+            margin: 0 auto;
+            width: 300px;
+            height: 60px;
+            align-content: center;
+            margin-bottom: 20px;
+        }
+
+        .buttonCenter2 { /*  카톡 로그인 블럭 */
+            display: block;
+            margin: 0 auto;
+            width: 250px;
+            height: 60px;
+            text-align: center;
+        }
+
+        .header_border { /*  위에 빈공간 뛰우기  */
+            padding-top: 150px;
+        }
+    </style>
+
+
+
+<body>
+
+
+
+
+
+
+</head>
+<div class="header_border"  style="align-self: center"></div>
+
+
+<div aria-label="Orange and tan hamster running in a metal wheel" role="img" class="wheel-and-hamster" onclick="window.location.href='/'">
+    <!--    <div class="wheel" ></div>-->
+    <div class="hamster" id="hamsterElement">
+        <div class="hamster__body">
+            <div class="hamster__head">
+                <div class="hamster__ear"></div>
+                <div class="hamster__eye"></div>
+                <div class="hamster__nose"></div>
+            </div>
+            <div class="hamster__limb hamster__limb--fr"></div>
+            <div class="hamster__limb hamster__limb--fl"></div>
+            <div class="hamster__limb hamster__limb--br"></div>
+            <div class="hamster__limb hamster__limb--bl"></div>
+            <div class="hamster__tail"></div>
+        </div>
+    </div>
+    <!--    <div class="spoke"></div>-->
+</div>
+    <div class="input-form-background row">
+        <div class="input-form col-md-12 mx-auto">
+            <h4 class="mb-3">로그인</h4>
+            <form class="validation-form" role="form" method="POST" action="/login">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label th:for="email">이메일주소</label>
+                        <input type="email" name="email" class="form-control" placeholder="이메일을 입력해주세요" required>
+                        <div class="invalid-feedback">
+                            아이디/이메일을 입력해주세요.
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label th:for="password">비밀번호</label>
+                        <input type="password" name="password" id="password" class="form-control" placeholder="비밀번호 입력"
+                               value="" required>
+                        <div class="invalid-feedback">
+                            비밀번호을 입력해주세요.
+                        </div>
+                    </div>
+                </div>
+                <div class="logInOutCenter">
+                    <button class="btn btn-primary buttonCenter" type="submit" >로그인</button>
+                    <button type="button" class="btn btn-primary buttonCenter"
+                            onclick="location.href='/create_account'">회원가입
+                    </button>
+                </div>
+                <a href="/oauth2/authorization/kakao" target="_self">
+                    <img src="/images/KakaoLogin.png" alt="카카오 로그인" class="custom-image buttonCenter2">
+                </a>
+            </form>
+        </div>
+    </div>
+    <footer class="my-3 text-center text-small">
+        <p class="mb-1">&copy; 2024 Animal Cafe ㈜
+            <br>조원 :   임경용, 양민혁, 고승우</p>
+    </footer>
+
+
+<script src="/js/all.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const hamsterElement = document.getElementById('hamsterElement');
+        if (hamsterElement) {
+            hamsterElement.addEventListener('click', function () {
+                console.log("rkrkrk");
+                window.location.href = '/';
+            });
+        }
+
+        var errorMessage = [[${errorMessage}]];
+        if (errorMessage != null && errorMessage !== 'null') {
+            alert(errorMessage);
+        }
+    });
+</script>
+</body>
+</html>

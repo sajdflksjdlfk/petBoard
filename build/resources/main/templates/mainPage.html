@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- BootStrap Link    -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- ToastUI Chart -->
+    <!--    https://congsong.tistory.com/68  설명 블로그 -->
+    <link rel="stylesheet" href="https://uicdn.toast.com/chart/latest/toastui-chart.min.css" />
+    <script src="https://uicdn.toast.com/chart/latest/toastui-chart.min.js"></script>
+
+    <!-- Main Page CSS  -->
+    <link href="/css/main.css" rel="stylesheet">
+
+<!--    google font-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+
+</head>
+
+
+<!-- Personal_info -Nav Start (href="/personal_info) -->
+
+
+<body>
+
+<!-- Header Start -->
+<header class="p-3 bg-warning text-white">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-between">
+            <a href="/" class="nav-link" style="display: flex; align-items: center;">
+                <img src="/images/dog4.png" alt="Home"
+                     style="width: 60px; height: 50px; border-radius: 10%; object-fit: cover;">
+            </a>
+            <h1 style="font-weight: bold">Animal Cafe</h1>
+            <div class="row justify-content-end">
+                <form class="search-container" th:action="@{/search_find}" method="get">
+                    <div class="new-wrapper">
+                    <div class="search text-end ml-3 mr-3" style="margin-left: 20px">
+                        <input class="form-control form-control-dark" type="text" name="keyword" placeholder="Search...">
+                    </div>
+                    </div>
+                </form>
+
+                <div class="text-end ml-auto d-flex">
+                    <button type="button" class="btn btn-info me-2" id="login" sec:authorize="isAnonymous()">Login</button>
+                    <!-- 로그아웃 버튼 -->
+                    <form action="/kakao/logout" method="post">
+                        <button type="submit" sec:authorize="isAuthenticated()"  class="btn btn-danger me-2 ml-2" >Logout</button>
+                    </form>
+                    <button type="button" sec:authorize="isAnonymous()" class="btn btn-dark me-2 ml-2" id="signup">Sign-up</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- Header End -->
+
+
+<div class="container-fluid container">
+
+    <!-- Nav Start -->
+    <div class="nav-container">
+        <div class="nav-container">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container">
+                    <div class="mx-auto">
+                        <div class="col-lg-4">
+                            <a href="/personal_info">
+                                <svg class="bd-placeholder-img rounded-circle" width="140" height="140"
+                                     xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 140x140"
+                                     preserveAspectRatio="xMidYMid slice" focusable="false">
+                                    <title>Placeholder</title>
+
+                                    <!-- 원형으로 자르기 위한 클립 경로 정의 -->
+                                    <defs>
+                                        <clipPath id="circleView">
+                                            <circle cx="50%" cy="50%" r="50%" />
+                                        </clipPath>
+                                    </defs>
+
+                                    <!-- 이미지 삽입 -->
+                                    <image class="mt-3" href="/images/nuguri.gif" width="140" height="140" clip-path="url(#circleView)"></image>
+
+                                    <sec:authorize access="isAuthenticated()">
+                                        <text x="50%" y="50%" fill="#777" dy=".3em">140x140</text>
+                                    </sec:authorize>
+                                </svg>
+                            </a>
+                            Welcome <p class="text-center" th:text="${userEmail}" style="width: 280px"></p>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+
+            <!-- Navigation Menu -->
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item">
+                    <a href="/" class="nav-link active nav-home" aria-current="page" style="margin: 20px">
+                        <svg class="bi me-2" width="16" height="16">
+                            <use xlink:href="#home"></use>
+                        </svg>
+                        Home
+                    </a>
+                </li>
+                <li>
+                    <a href="/freeBoard" class="nav-link link-dark">
+                        <svg class="bi me-2" width="16" height="16">
+                            <use xlink:href="#speedometer2"></use>
+                        </svg>
+                        자유게시판
+                    </a>
+                </li>
+                <li>
+                    <a href="/QnA" class="nav-link link-dark">
+                        <svg class="bi me-2" width="16" height="16">
+                            <use xlink:href="/QnA"></use>
+                        </svg>
+                        QnA
+                    </a>
+                </li>
+                <li>
+                    <a href="/UCC" class="nav-link link-dark">
+                        <svg class="bi me-2" width="16" height="16">
+                            <use xlink:href="/UCC"></use>
+                        </svg>
+                        UCC
+                    </a>
+                </li>
+                <li>
+                    <a href="/guestBook" class="nav-link link-dark">
+                        <svg class="bi me-2" width="16" height="16">
+                            <use xlink:href="/guestBook"></use>
+                        </svg>
+                        방명록
+                    </a>
+                </li>
+            </ul>
+            <!-- Navigation Menu END -->
+
+            <!-- Chart Count   -->
+            <div id="chart" style="margin-left: 10px; margin-top: 20px" ></div>
+            <!-- Chart Count  END   -->
+        </div>
+    </div>
+    <!-- Nav End -->
+
+
+    <!-- Main Content    -->
+    <div class="main-content">
+
+        <!--  Banner  -->
+        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+            </ol>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img class="d-block w-100" src="/images/banner.jpg" alt="First slide">
+                </div>
+                <div class="carousel-item">
+                    <img class="d-block w-100" src="/images/banner2.jpg" alt="Second slide">
+                </div>
+                <div class="carousel-item">
+                    <img class="d-block w-100" src="/images/banner3.png" alt="Third slide">
+                </div>
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+
+        <!--  Information  -->
+        <div class="p-1 mb- bg-light rounded-3" style="margin-top: 20px; background-color: #f9f9f9; border: 2px solid #ccc;">
+            <div class="container-fluid py-5">
+                <h1 class="display-5 fw-bold" style="color: #333; text-shadow: 1px 1px 2px #ddd;">안내사항</h1>
+                <div class="col-md-8 fs-4">
+                    <p style="color: #555; font-size: 1.1em;">🐶 카페 애견파인들을 위한 특별한 공간, 애견카페에 오신 것을 환영합니다!</p>
+                    <p style="color: #666; font-size: 1.1em;">🎉 매일 새롭게 업데이트되는 유용한 정보와 따뜻한 커뮤니티를 즐겨보세요. .</p>
+                    <p style="color: #777; font-size: 1.1em;">🌟 다양한 애견 이야기와 유용한 팁을 공유하고, 반려견과의 소중한 순간을 함께 만들어보세요</p>
+                    <p style="color: #888; font-size: 1.1em;">📢 애견과 함께하는 특별한 시간을 더 특별하게 만들어줄 애견카페의 소식을 만나보세요! </p>
+                    <p style="color: #999; font-size: 1.1em;">🐾 애견카페의 다양한 소식을 블로그에서 만나보세요! 함께하는 즐거움이 가득한 애견 생활을 위한 유용한 정보를 제공합니다.</p>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!--  Hot content  -->
+        <!--  Recent content  -->
+        <!--  advert content  -->
+        <div class="row align-items-md-stretch">
+
+            <!--  Hot content  -->
+            <div class="col-md-6">
+                <div class="h-100 p-5 text-white bg-dark rounded-3" style="margin-top: 20px">
+                    <h2>랜덤글</h2>
+                    <hr>
+                    <div class="col-md-20 fs-4">
+
+                        <table class="table mt-2">
+                            <tbody>
+                            <tr th:each="article1 : ${articles1.getContent()}">
+                                <td class="p-3 mb-1 bg-white border rounded-3" style="width: 750px">
+                                    <img src="/images/new.gif" alt="New" style="width: 50px" /> <!-- 새로운 글 아이콘 -->
+                                    제목 : <a th:href="@{/article/{id}(id=${article1.id})}" th:text="${article1.title}">검색후 나오는 제목</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!--  위에것 대신 들어갈 것 hr 태그 밑에까지만 교체 -->
+                    <!--                    <table class="table table-borderless table-sm">-->
+                    <!--                        <tr th:each="article : ${latestArticles}">-->
+                    <!--                            <td>-->
+                    <!--                                <a th:href="@{/board/readView(bno=${article.id}, bgno=${article.category.id})}" style="color: red">-->
+                    <!--                                    <strong th:text="${article.title}"></strong>-->
+                    <!--                                </a>-->
+                    <!--                            </td>-->
+                    <!--                        </tr>-->
+                    <!--                    </table>-->
+                </div>
+            </div>
+
+            <!--  Recent content  -->
+            <div class="col-md-6">
+                <div class="h-100 p-2 bg-light border rounded-3" style="margin-top: 20px; margin-top: 10px">
+                    <h2 class="mt-2" style="font-family: 'Roboto', sans-serif;  font-weight: bold;">최신글</h2>
+                    <hr>
+                    새로올라온 최근게시물
+                    <table class="table mt-2">
+                        <tbody>
+                        <tr th:each="article : ${articles.getContent()}">
+                            <td class="p-3 mb-1 bg-white border rounded-3" style="width: 750px">
+                                <img src="/images/new.gif" alt="New" style="width: 50px" /> <!-- 새로운 글 아이콘 -->
+                                제목 : <a th:href="@{/article/{id}(id=${article.id})}" th:text="${article.title}">검색후 나오는 제목</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!--  advert content  -->
+        <div class="p-5 mb-4 bg-light rounded-3" style="margin-top: 40px;">
+            광고
+            <img src="/images/banner.jpg" style="width: 100%" alt="" onclick="window.open('https://jennetph.co.kr/', '_blank')">
+        <hr>
+            <h3 style="color: red"> 국내 1위 동물병원 055-585-1718 </h3>
+            <h5> 동물을 사랑하는 여러분들을 위해 최저가로 모십니다.</h5>
+        </div>
+    </div>
+    <!-- Main Content END  -->
+</div>
+
+<!--Footer -->
+<footer class="footer mt-auto py-3" style="background-color: #f8f9fa;">
+    <div class="container">
+        <div class="text-center text-muted py-3">
+            <p class="mb-0">국립창원대학교 (우)51140 경남 창원시 의창구 창원대학로 20 - 조원:   임경용, 양민혁, 고승우</p>
+        </div>
+    </div>
+</footer>
+<!--Footer End -->
+
+</body>
+<script>
+</script>
+<script src="/js/columnGraph.js"></script>
+<script src="/js/all.js"></script>
+</html>

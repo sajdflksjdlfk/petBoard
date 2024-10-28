@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입 화면 </title>
+
+    <!--    CSS 모음  -->
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!--  ;hasmter-->
+    <link rel="stylesheet" href="/css/hamster_wheel.css" type="text/css">
+    <!--    CSS 모음 끝   -->
+
+    <style>
+        body { /*회원가입 바디 */
+            min-height: 100vh;
+            background: linear-gradient(to top right, #92b5db 0%, #1d466c 100%);
+        }
+
+        .input-form { /*회원가입 인풋 폼 스타일 */
+            max-width: 680px;
+
+            margin-top: 80px;
+            padding: 32px;
+
+            background: #fff;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            border-radius: 10px;
+            -webkit-box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15);
+            -moz-box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15);
+            box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15)
+        }
+
+
+        .header_border { /*  위에 빈공간 뛰우기  */
+            padding-top: 150px;
+        }
+
+
+
+    </style>
+</head>
+<body>
+
+<div aria-label="Orange and tan hamster running in a metal wheel" role="img" class="wheel-and-hamster">
+<!--    <div class="wheel" ></div>-->
+    <div class="hamster" id="hamsterElement">
+        <div class="hamster__body">
+            <div class="hamster__head">
+                <div class="hamster__ear"></div>
+                <div class="hamster__eye"></div>
+                <div class="hamster__nose"></div>
+            </div>
+            <div class="hamster__limb hamster__limb--fr"></div>
+            <div class="hamster__limb hamster__limb--fl"></div>
+            <div class="hamster__limb hamster__limb--br"></div>
+            <div class="hamster__limb hamster__limb--bl"></div>
+            <div class="hamster__tail"></div>
+        </div>
+    </div>
+<!--    <div class="spoke"></div>-->
+</div>
+
+
+    <div class="container">
+        <div class="input-form-background row">
+            <div class="input-form col-md-12 mx-auto">
+                <h4 class="mb-3">회원가입</h4>
+
+                <form class="validation-form" id="form" action="/members/new" method="post">
+                    <div class="mb-3">
+                        <label for="email">이메일</label>
+                        <div class="input-group mb-3">
+                            <input type="email" class="form-control" id="email" name="email"
+                                   placeholder="you@example.com" required>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" id="check-email">중복확인</button>
+                            </div>
+                        </div>
+                        <div class="invalid-feedback">
+                            이메일을 입력해주세요.
+                        </div>
+
+                        <br><label for="nickname">닉네임</label>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" id="nickname" name="nickname" placeholder="닉네임을 입력해주세요"
+                                   required>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" id="check-nickname">중복확인</button>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="password">비밀번호</label>
+                                <input type="password" class="form-control" id="password" name="password" placeholder=""
+                                       value="" onkeyup="checkPasswordMatch()" required>
+
+                                <div class="invalid-feedback">
+                                    비밀번호을 입력해주세요.
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="confirm_password">비밀번호 확인</label>
+                                <input type="password" class="form-control" id="confirm_password" name="confirm_password"
+                                       placeholder="" value="" onkeyup="checkPasswordMatch()" required>
+                                <div class="invalid-feedback">
+                                    비밀번호 확인을 입력해주세요.
+                                </div>
+                                <div id="password_match"></div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="mb-4">
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="agreement" required>
+                        <label class="custom-control-label" for="agreement">개인정보 수집 및 이용에 동의합니다.</label>
+                    </div>
+                    <div class="mb-4"></div>
+                    <button class="btn btn-primary btn-lg btn-block" type="button" onclick="validation()">가입 완료</button>
+                </form>
+            </div>
+        </div>
+        <footer class="my-3 text-center text-small">
+            <p class="mb-1">&copy; 2024 Animal Cafe ㈜ </p>
+        </footer>
+    </div>
+<script>
+    const hamsterElement = document.getElementById('hamsterElement');
+
+    hamsterElement.addEventListener('click', function() {
+        window.location.href = 'login';
+    });
+    function checkPasswordMatch() {
+        var password = document.getElementById("password").value;
+        var confirm_password = document.getElementById("confirm_password").value;
+
+        if (password == confirm_password) {
+            document.getElementById("password_match").innerHTML = "비밀번호 일치!";
+        } else {
+            document.getElementById("password_match").innerHTML = "비밀번호가 일치하지 않습니다.";
+        }
+    }
+
+</script>
+<script src="/js/all.js"></script>
+<script src="/js/MemberForm.js" th:src="@{/js/MemberForm.js}">
+
+</script>
+</body>
+</html>
